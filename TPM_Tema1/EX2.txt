@@ -1,0 +1,51 @@
+a) 
+ ----------- Algoritm candidat -----------------------------------------
+public class LockBasedQueue {
+	int head = 0, tail = 0;
+	int items [] = new int[ QSIZE ];
+	ReentrantLock lock = new ReentrantLock(); 
+
+	public void enq(int x) {
+		while ( tail - head == QSIZE ) {};
+		lock.lock();
+		try {
+			items [ tail % QSIZE ] = x; 
+			tail ++;
+		} finally {
+			lock.unlock();
+		}
+	}
+
+	public int deq () {
+		while ( tail == head ) {};
+		lock.lock();
+		try {
+			int item = items [ head % QSIZE ]; 
+			head ++;
+			return item;
+		} finally {
+			lock.unlock();
+		}
+	}
+}
+
+------------------------------------------------------------------------
+
+Fie cele doua threaduri P(producator) si C(consumator).
+Pornim cele doua threaduri simultan.
+Sa zicem ca in executie ajunge intai P, imediat urmat de C.
+P isi incepe treaba, pune lock si in timpul asta C incearca executia. C va vedea lock pus si va astepta deblocarea acestuia. P-ul si-a terminat treaba producand un anumit 
+rezultat dorit, iar apoi C-ul va consuma acel rezultat. Daca nu s-ar fi pus acel lock, consumatorul nu ar fi consumat rezultatul producatorului ci ar fi consumat ceva eronat.
+Cu alte cuvinte, prezenta acelui lock garanteaza ca in timp ce un producator produce rezultat, un consumator sa nu poata consuma nimic pana la finalizarea rezultatului de la 
+producator, iar un alt producator sa nu poata influenta rezultatul. Vice-versa, un consumator pune lockul iar celelalte threaduri asteapta, pentru a nu-i influenta consumarea
+rezultatului.
+
+DECI, algoritmul lucreaza corect.
+
+b) Exista doua motive pentru care este nevoie si de valoarea i pentru eticheta. Motivul cental este ca fara acea valoare i, exista sansa sa se produca deadlock, un thread
+poate esua executia sa, si nu va mai debloca acel lock. Celalat motiv pentru care este nevoie de valoare i, este ca in anumite cazuri, nu s-ar sti care este prioritatea de 
+intrare a threadurilor in propria sectiune critica, asfel se pot produce rezultate eronate.
+
+c) Folosirea lockului inainte de blockul try, impiedica alte threaduri sa ajunga in propriile sectiuni critice, astfel incat threadurile sa nu pot altera rezultatele altui
+thread inainte ca acesta sa-si termine sectiunea critica.
+Totodata, daca am fi folosit lock in interiorul blocului try, atunci cand threadul esueaza, exista sansa ca lockul sa ramana pus, astfel, blocand restul threadurilor.

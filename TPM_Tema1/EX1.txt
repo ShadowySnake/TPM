@@ -1,0 +1,23 @@
+Thread 	     State 1	     State 2 		State 3
+A 	---- r.read():1 ---- r.read():1 ---- r.read():1 ---->
+B 	---- r.write(1) ---- r.read():2 ---- r.read():2 ---->
+C	-------------------- r.write(2) ---- r.write(2) ---->
+
+r = 0 initiala
+
+Pentru a fi o secventa liniarizabila, ordinea de executare a threadurilor ar trebui sa fie aceeasi cu ordinea pornirii acestora. 
+( adica A then B then C, adica niciuna din operatiile din A sa nu fie executate dupa B sau C )
+Se porneste mai intai threadul A
+A -> read 1 ==> valoarea 1 nu exista in r deci se blocheaza
+B -> write 1 ==> scrie valoarea 1 in r si apoi vine A si reface read 1
+Deci se observa ca secventa nu este liniarizabila, in loc sa faca in ordinea A-read:1 B-write:1.... mai intai se va face B-write:1 A-read:1....
+
+Presupunand ca primul read din A va vedea valoarea 0 si nu va esua, va aparea iar o problema cand incearca B sa citeasca 2.
+A -> read 1 ==> poate citi 1 datorat writeului anterior B-write 1
+B -> read 2 ==> nu exista valoarea 2 in r si deci se blocheaza
+C -> write 2 ==> scrie valoarea 2 in r, iar B-ul revine sa citeasca 2
+Deci din nou se vede ca secventa nu este liniarizabila, pierzandusi ordinea cand B incearca read 2 cand 2 nu exista in r,
+chiar daca am presupus ca primul write din A citeste 0-ul initial.Deci, secventa nu este liniarizabila.
+
+Este secventa consistent secventiala? Da, fiindca in urma executarii secventei in r vom avea valorile 0, 1, 2 (2 apare de 2 ori), presupunand ca readul nu elimina valoarea
+citita din r.
