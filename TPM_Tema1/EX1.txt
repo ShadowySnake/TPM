@@ -1,4 +1,4 @@
-Thread 	     State 1	     State 2 		State 3
+Thread 	    (1)	        (2) 		(3)
 A 	---- r.read():1 ---- r.read():1 ---- r.read():1 ---->
 B 	---- r.write(1) ---- r.read():2 ---- r.read():2 ---->
 C	-------------------- r.write(2) ---- r.write(2) ---->

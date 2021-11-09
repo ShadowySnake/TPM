@@ -1,0 +1,38 @@
+-------Teste rulate----------------
+Subpunctul a) pentru 10, 100, 500, 1000 si 10000 threaduri
+Subpunctul b) pentru 10, 100, 500, 1000 si 10000 threaduri
+
+!!! Pentru ambele subpuncte, cantitatea maxima de portii din oala este 3 !!!
+!!! Pentru subpunctul b, pentru a afla timpul de rulare am folosit formula (timp_total/portii_maxime) unde portii maxime este cantitatea de portii pe care le pot manca fiecare 
+salbatic exemplu, fiecare salbatic mananca de 5 ori, deci timpul de rulare va fi (timp_total/5) !!!
+
+------Rezultate experimentale--------
+
+I)   TIMP TOTAL b 800 ms ==> timp_executie = 861/10 ~= 86 ms
+     subpunct a,   10 threaduri				      ------> !!--timp_executie--!!   152 milisecunde
+     subpunct b,   10 threaduri, 10 portii maxim per salbatic ------> !!--timp_executie--!!   sub 100 milisecunde
+
+II)  TIMP TOTAL b 2 secunde si 1 milisecunda ==> timp_executie = 2001/10 ~= 200 ms
+     subpunct a,  100 threaduri				      ------> !!--timp_executie--!!   240 milisecunde
+     subpunct b,  100 threaduri, 10 portii maxim per salbatic ------> !!--timp_executie--!!   200 milisecunde
+
+III) TIMP TOTAL b 70 secunde ==> timp_executie = 70/3 ~= 23 s
+     subpunct a,  500 threaduri				      ------> !!--timp_executie--!!   360 milisecunde
+     subpunct b,  500 threaduri,  3 portii maxim per salbatic ------> !!--timp_executie--!!    23 secunde
+
+IV)  TIMP TOTAL b 7 minute si 25 secunde ==> timp_executie = 7m 25s / 2 ~= 3minute si 40 secunde 
+     subunpct a,  1000 threaduri			       ------> !!--timp_executie--!!   891 milisecunde
+     subpunct b,  1000 threaduri,  2 portii maxim per salbatic ------> !!--timp_executie--!!   3 minute si 40 secunde
+
+V)   TIMP TOTAL b ... am oprit rularea cand am ajuns la 14 minute pentru ca dura prea mult 
+     subpunct a, 10000 threaduri			       ------> !!--timp_executie--!!   4 secunde 300 milisecunde
+     subpunct b, 10000 threaduri,  2 portie maxim per salbatic ------> !!--timp_executie--!!   peste 7 minute
+
+
+
+----CONCLUZII EXPERIMENTALE----
+1)Pentru un numar mic de threaduri (adica sub 100), cele doua subpuncte produc aproximativ acelasi timp de executie.
+2)Pentru un numar mai mare de threaduri (adica peste 500), se vede ca subpunctul b produce un timp de executie mult mai mare, datorat garantarii fairness-ului.
+Pentru a garanta fairness, m-am folosit de un vector (o lista) care am partajat-o, din care preiau numarul minim de portii pe care un salbatic a mancat. Lista contine, pentru fiecare 
+salbatic, numarul de portii pe care acesta a mancat, deci daca un salbatic a apucat sa manance 1 data, atunci acesta nu va mai apuca sa manance pana si ceilalti salbatici au mancat o
+portie. Timpul exponential mai mare este dat si de accesarea acestei liste care, cu cat sunt mai multi salbatici, cu atat mai greu este de preluat numarul minim la portii din lista.
