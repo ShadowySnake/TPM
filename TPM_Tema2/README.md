@@ -1,5 +1,5 @@
 Echipa:
-Zamfir Adrian-Iulian Grupa 2TPM2
+Zamfir Adrian-Iulian Grupa 3TPM2
 
 Codul pentru EX3 este in folderul EX3, rezultatele sunt ex3Rez.txt.
 
