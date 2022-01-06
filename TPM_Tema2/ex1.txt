@@ -1,0 +1,8 @@
+a) pred.next = node ---> se creaza nod nou, se pune referinta in pred pe acest nod care contine referinta prentru resul liste (daca mai are elemente dupa el)
+
+b) return false --> dupa ce se verifica faptul ca elementul/atributul cerut exista deja in lista, acesta, automat, nu se mai insereaza si returneza esuare
+
+c) pred.next = current.next ----> se trece peste atributul curent prin dereferentierea acestuia 
+(pred face referinta imediat la orice este dupa acest nod curent, daca mai este ceva dupa el)
+
+d) return false ---> dupa verificare existentei atributului/elementului cerut, daca acesta nu face parte din lista, nu se elimina nimic si returneza eroare

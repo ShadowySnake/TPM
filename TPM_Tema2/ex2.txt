@@ -1,0 +1,18 @@
+Grupa TPM2
+
+a) size.getAndIncrement() este nevoie ca sa asigure incrementarea inainte ca atributul sa fie accesat.
+Practic, in loc sa se faca override pe valoare (care poate induce erori, better said "lost updates"), getAndIncrement poate detecta o noua modificare 
+(intre read si write un thread poate modifica sizeul, si astfel este nevoie de o notificare, pentru a putea pastra corectitudinea).
+
+b) Sunt doua probleme aici:
+1 -> sunt nevoie de mai multe resurse, intrucat fiecare atribut(nod) are cate un lock propriu, si deci trebuie avut grija la sincronizare intre lockuri.
+2 -> doar un element este blocat, si nu intreaga lista (precum se inampla pe un enq.lock()), astfel lista se poate modifica inainte ca headul sa se deblocheze, si deci se pierde FIFO.
+
+c) Ideea spiningului este sa tina threadurile active, fara a mai fi trimise in sleep(sau modul wait-notify), prin introducerea unui "loop blocant".
+Cu toate ca se necesita mai multe resurse(din partea memoriei) ca timp de executare este mai bun, iar algoritmul dat functioneaza.
+
+d) Verificarea pentru coada vida este de preferabil sa fie pusa in interiorul sectiunii critice din doua motive:
+1 -> Throw-ul va fi mereu complementat de finally, astfel ca dupa punerea lockului, chiar daca se da eroare lock-ul se va debloca.
+2 -> Punerea inaitea sectiunii critice a throw-ului, poate produce erori precum pierderea ordinii executarii threadurilor si posibila neconcordanta intre date.
+Throw-ul opreste executia threadului, indififerent de unde s-ar afla, deci se poate folosi si inafara sectiunii critice,
+dar ar fi de preferabil ca acesta sa fie pus in interiorul sectiunii critice pentru a nu avea erori.

@@ -1,0 +1,24 @@
+---Ideea implementarii---
+Fiindca pentru fiecare operatie care modifica lista se face o incrementare a versiunii, atunci numarul versiunii poate semnifica fix elementul nou bagat.
+Functia validare ( numai aceasta am modificat-o pe langa adaugarea unui increment in add  si remove ) trece prin versiunile date, si se opreste atunci cand da peste 
+un element identic cu cel dat, altfel inseamna ca elementul nu exista in lista.
+In principal, folosind numarul de versiune, nu mai conteaza daca cheia este mai mica sau nu ( noi stim ca oricum cheile vor fi in ordine datorat hash-ului )
+si chiar daca numarul de versiune depaseste dimensiunea listei, eventual lista va fi nula si deci nu s-a gasit un element potrivit in validate.
+
+
+----Rezultate experimentale----
+
+Rulare		Varianta Originala: 						Varianta Modificata:
+I) 			TIMP ---> 2 min 05 secunde					TIMP ---> 1 min 18 secunde
+II)			TIMP ---> 2 min 11 secunde					TIMP ---> 	51 secunde
+III)			TIMP ---> 1 min 44 secunde					TIMP ---> 1 min 06 secunde
+IV)			TIMP ---> 2 min 20 secunde					TIMP ---> 1 min 01 secunde
+
+		TIMP MEDIU REZULTAT ---> 2 min 05 secunde			TIMP MEDIU REZULTAT ---> 1 min 04 secunde
+
+---Concluzie---
+Este de mentionat faptul ca rezultatele sunt obtinute prin operatia de add.
+Evident, varianta modificata este cu aproape un minut mai rapida.
+Varianta Modificata este mai optimala datorat faptului ca nu face la fel de multe comparatii precum cea originala.
+In validare, in loc sa verifice constant cheia si apoi sa faca si compararea ca itemul din nod sa fie aceelasi (ceea ce se intampla in original),
+folisind o versionare se ignora compararea cu chiea (fiindca oricum acestea sunt in ordine datorat hashului) si se face eventual o comparare cu item-ul.
